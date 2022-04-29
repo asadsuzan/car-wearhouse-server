@@ -1,5 +1,5 @@
 const express = require("express");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const cors = require("cors");
 const app = express();
 require("dotenv").config();
@@ -24,13 +24,21 @@ async function run() {
     await client.connect();
     const carCollections = client.db("managcar").collection("cars");
 
+    //   get single car by id
+
+    app.get("/cars/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const car = await carCollections.findOne(query);
+      res.send(car);
+    });
+
     // get limited cars
     app.get("/cars/home", async (req, res) => {
       const query = {};
       const cursor = carCollections.find(query);
       const cars = await cursor.limit(6).toArray();
       res.send(cars);
-      console.log("geting", cars);
     });
   } finally {
   }
