@@ -24,7 +24,14 @@ async function run() {
     await client.connect();
     const carCollections = client.db("managcar").collection("cars");
 
-    console.log("ok");
+    // get limited cars
+    app.get("/cars/home", async (req, res) => {
+      const query = {};
+      const cursor = carCollections.find(query);
+      const cars = await cursor.limit(6).toArray();
+      res.send(cars);
+      console.log("geting", cars);
+    });
   } finally {
   }
 }
