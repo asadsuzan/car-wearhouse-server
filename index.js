@@ -23,13 +23,29 @@ async function run() {
   try {
     await client.connect();
     const carCollections = client.db("managcar").collection("cars");
-
-    //   get single car by id
-
-    app.get("/cars/:id", async (req, res) => {
+    //   update stokes by id
+    app.put("/cars/home/:id", async (req, res) => {
       const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const car = await carCollections.findOne(query);
+      const updatedItem = req.body;
+      console.log(updatedItem);
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          ...updatedItem,
+        },
+      };
+      const result = await carCollections.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send({ success: "updated" });
+    });
+    // get single car by id
+    app.get("/cars/home/:id", async (req, res) => {
+      const id = req.params.id;
+      const car = await carCollections.findOne({ _id: ObjectId(id) });
       res.send(car);
     });
 
