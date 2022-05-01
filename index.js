@@ -18,16 +18,15 @@ const client = new MongoClient(uri, {
 });
 
 // conect to db
-
 async function run() {
   try {
     await client.connect();
     const carCollections = client.db("managcar").collection("cars");
+
     //   update stokes by id
     app.put("/cars/home/:id", async (req, res) => {
       const id = req.params.id;
       const updatedItem = req.body;
-      console.log(updatedItem);
       const filter = { _id: ObjectId(id) };
       const options = { upsert: true };
       const updatedDoc = {
@@ -42,6 +41,7 @@ async function run() {
       );
       res.send({ success: "updated" });
     });
+
     // get single car by id
     app.get("/cars/home/:id", async (req, res) => {
       const id = req.params.id;
@@ -61,9 +61,11 @@ async function run() {
 }
 run().catch(console.dir);
 
+// home route
 app.get("/", (req, res) => {
   res.send("welcome to car manager server");
 });
+
 app.listen(port, () => {
   console.log("Listenting the port", port);
 });
