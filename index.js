@@ -23,6 +23,22 @@ async function run() {
     await client.connect();
     const carCollections = client.db("managcar").collection("cars");
 
+    // get items by author
+    app.get("/cars/myitems", async (req, res) => {
+      const author = req.query;
+      const cursor = carCollections.find(author);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // add items
+    app.post("/cars/all", async (req, res) => {
+      const newItem = req.body;
+      const result = await carCollections.insertOne(newItem);
+      res.send({ messege: "item added successfull" });
+      console.log(newItem);
+    });
+
     // delet item by id
     app.delete("/cars/all/:id", async (req, res) => {
       const id = req.params.id;
