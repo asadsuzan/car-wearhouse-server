@@ -23,6 +23,13 @@ async function run() {
     await client.connect();
     const carCollections = client.db("managcar").collection("cars");
 
+    // delet item by id
+    app.delete("/cars/all/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await carCollections.deleteOne({ _id: ObjectId(id) });
+      res.send({ delete: "success" });
+    });
+
     //   update stokes by id
     app.put("/cars/home/:id", async (req, res) => {
       const id = req.params.id;
