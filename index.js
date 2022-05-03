@@ -1,4 +1,5 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const cors = require("cors");
 const app = express();
@@ -23,12 +24,28 @@ async function run() {
     await client.connect();
     const carCollections = client.db("managcar").collection("cars");
 
+    // for jwt
+    app.post("/signin", async (req, res) => {
+      const email = req.body;
+      const token = jwt.sign(email, process.env.ACCESS_TOKEN);
+      res.send({ token: token });
+    });
+
     // get items by author
     app.get("/cars/myitems", async (req, res) => {
-      const author = req.query;
-      const cursor = carCollections.find(author);
+      const author = req.query.author;
+      const accessToken = req.query.access_token;
+      const cursor = carCollections.find({ author });
       const result = await cursor.toArray();
-      res.send(result);
+      //  verify token
+      try {
+        const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN);
+        if (author === decoded.email) {
+          res.send(result);
+        }
+      } catch (err) {
+        res.send({ message: 403 });
+      }
     });
 
     // add items
