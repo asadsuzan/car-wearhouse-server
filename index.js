@@ -53,7 +53,6 @@ async function run() {
       const newItem = req.body;
       const result = await carCollections.insertOne(newItem);
       res.send({ messege: "item added successfull" });
-      console.log(newItem);
     });
 
     // delet item by id
@@ -104,6 +103,7 @@ async function run() {
       res.send(cars);
     });
   } finally {
+    // for close
   }
 }
 run().catch(console.dir);
