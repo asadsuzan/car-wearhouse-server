@@ -114,5 +114,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log("Listenting the port", port);
+  console.log("LISTENING TO PORT", port);
 });
