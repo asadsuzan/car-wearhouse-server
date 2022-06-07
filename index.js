@@ -92,9 +92,8 @@ async function run() {
     app.get("/cars/home", async (req, res) => {
       const query = {};
       const cursor = carCollections.find(query);
-      // const cars = await cursor.limit(6).toArray();
       const cars = await cursor.toArray();
-      console.log(cars);
+      // send data with reverse way for get latest items
       res.send(cars.reverse().slice(0, 6));
     });
     // get all cars
