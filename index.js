@@ -92,8 +92,10 @@ async function run() {
     app.get("/cars/home", async (req, res) => {
       const query = {};
       const cursor = carCollections.find(query);
-      const cars = await cursor.limit(6).toArray();
-      res.send(cars);
+      // const cars = await cursor.limit(6).toArray();
+      const cars = await cursor.toArray();
+      console.log(cars);
+      res.send(cars.reverse().slice(0, 6));
     });
     // get all cars
     app.get("/cars/all", async (req, res) => {
